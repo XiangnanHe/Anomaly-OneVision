@@ -1,4 +1,4 @@
-export CUDA_HOME=/data/02/jiacong/cuda-12.1
+export CUDA_HOME=/usr/local/cuda
 export OMP_NUM_THREADS=16
 #export NCCL_IB_DISABLE=1
 #export NCCL_IB_GID_INDEX=3
@@ -29,19 +29,19 @@ PREV_STAGE_CHECKPOINT="lmms-lab/llava-onevision-qwen2-0.5b-ov"
 echo "PREV_STAGE_CHECKPOINT: ${PREV_STAGE_CHECKPOINT}"
 echo "MID_RUN_NAME: ${RUN_NAME}"
 
-NUM_GPUS=8
+NUM_GPUS=1
 NNODES=1
 RANK=0
 ADDR=127.0.0.1
 PORT=29505
 
-ACCELERATE_CPU_AFFINITY=1 CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 torchrun --nproc_per_node="${NUM_GPUS}" --nnodes="${NNODES}" --node_rank="${RANK}" --master_addr="${ADDR}" --master_port="${PORT}" \
+ACCELERATE_CPU_AFFINITY=1 CUDA_VISIBLE_DEVICES=0 torchrun --nproc_per_node="${NUM_GPUS}" --nnodes="${NNODES}" --node_rank="${RANK}" --master_addr="${ADDR}" --master_port="${PORT}" \
     llava/train/train_mem.py \
     --deepspeed scripts/zero2.json \
     --model_name_or_path $PREV_STAGE_CHECKPOINT \
     --version $PROMPT_VERSION \
-    --data_path /data/02/jiacong/data/our_datasets2.yaml \
-    --image_folder /data/02/jiacong/data \
+    --data_path /mnt/task_runtime/Anomaly-OneVision/data/datasets.yaml \
+    --image_folder /mnt/task_runtime/Anomaly-OneVision/data \
     --video_folder None \
     --mm_tunable_parts="mm_mlp_adapter,mm_language_model" \
     --mm_vision_tower_lr=1e-6 \
@@ -56,7 +56,7 @@ ACCELERATE_CPU_AFFINITY=1 CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 torchrun --nproc_
     --mm_patch_merge_type spatial_unpad \
     --bf16 True \
     --run_name $RUN_NAME \
-    --output_dir /data/02/jiacong/anomaly_detection/Anomaly-OneVision/checkpoints/$RUN_NAME \
+    --output_dir /mnt/task_runtime/Anomaly-OneVision/data/output/checkpoints/$RUN_NAME \
     --num_train_epochs 1 \
     --per_device_train_batch_size 1 \
     --per_device_eval_batch_size 2 \
