@@ -28,7 +28,7 @@ def eval_model(args):
     device = "cuda"
     device_map = "auto"
     overwrite_config = {'tie_word_embeddings': False, 'use_cache': True, 'vocab_size': 152064}
-    overwrite_config = {'vocab_size': 152064}
+    overwrite_config = {'vocab_size': 151936}
     tokenizer, model, image_processor, max_length = load_pretrained_model(pretrained, None, model_name, device_map=device_map, cache_dir='./cache', torch_dtype="bfloat16", overwrite_config=overwrite_config)
     
     if args.size != '7b':
@@ -104,7 +104,7 @@ def eval_model(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Test detection performance of the model")
-    parser.add_argument("--data_dir", type=str, default='/data/02/jiacong/data/', help="Path to your data directory")
+    parser.add_argument("--data_dir", type=str, default='/mnt/task_runtime/Anomaly-OneVision/data', help="Path to your data directory")
     parser.add_argument("--bench_json", type=str, default='VisA/test_data.json', help="Path to your benchmark json file")
     parser.add_argument("--model_checkpoint", type=str, default=None, help="Path to your pretrained model")
     parser.add_argument("--size", type=str, default='7b', help="Model size")
