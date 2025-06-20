@@ -1,8 +1,8 @@
 datasets:
   # - json_path: "/mnt/task_runtime/Anomaly-OneVision/data/anomaly_shapenet/anomaly_shapenet_zero_shot2.json"
   #   sampling_strategy: "all"
-  # - json_path: "/mnt/task_runtime/Anomaly-OneVision/data/bmad/bmad_zero_shot.json"
-  #   sampling_strategy: "all"
+  - json_path: "/mnt/task_runtime/Anomaly-OneVision/data/bmad/bmad_zero_shot.json"
+    sampling_strategy: "all"
   - json_path: "/mnt/task_runtime/Anomaly-OneVision/data/mvtec_anomaly_detection/mvtec_zero_shot.json"
     sampling_strategy: "all"
   # - json_path: "/mnt/task_runtime/Anomaly-OneVision/data/mvtec3d/mvtec3d_zero_shot2.json"
