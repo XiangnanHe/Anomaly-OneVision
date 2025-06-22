@@ -1,9 +1,9 @@
 export CUDA_HOME=/usr/local/cuda
-export OMP_NUM_THREADS=16
-#export NCCL_IB_DISABLE=1
+export OMP_NUM_THREADS=64
+# export NCCL_IB_DISABLE=1
 #export NCCL_IB_GID_INDEX=3
 #export NCCL_SOCKET_IFNAME=eno1
-#export NCCL_DEBUG=INFO
+export NCCL_DEBUG=INFO
 
 #export NCCL_P2P_DISABLE=1
 #export NCCL_IB_DISABLE=1
@@ -37,7 +37,7 @@ PORT=29505
 
 ACCELERATE_CPU_AFFINITY=1 CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 torchrun --nproc_per_node="${NUM_GPUS}" --nnodes="${NNODES}" --node_rank="${RANK}" --master_addr="${ADDR}" --master_port="${PORT}" \
     llava/train/train_mem.py \
-    --deepspeed scripts/zero3_offload.json \
+    --deepspeed scripts/zero2_offload.json \
     --model_name_or_path $PREV_STAGE_CHECKPOINT \
     --version $PROMPT_VERSION \
     --data_path /mnt/task_runtime/Anomaly-OneVision/data/datasets.yaml \
