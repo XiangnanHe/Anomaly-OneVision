@@ -29,13 +29,13 @@ PREV_STAGE_CHECKPOINT="lmms-lab/llava-onevision-qwen2-7b-ov"
 echo "PREV_STAGE_CHECKPOINT: ${PREV_STAGE_CHECKPOINT}"
 echo "MID_RUN_NAME: ${RUN_NAME}"
 
-NUM_GPUS=4
+NUM_GPUS=8
 NNODES=1
 RANK=0
 ADDR=127.0.0.1
 PORT=29505
 
-ACCELERATE_CPU_AFFINITY=1 CUDA_VISIBLE_DEVICES=4,5,6,7 torchrun --nproc_per_node="${NUM_GPUS}" --nnodes="${NNODES}" --node_rank="${RANK}" --master_addr="${ADDR}" --master_port="${PORT}" \
+ACCELERATE_CPU_AFFINITY=1 CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 torchrun --nproc_per_node="${NUM_GPUS}" --nnodes="${NNODES}" --node_rank="${RANK}" --master_addr="${ADDR}" --master_port="${PORT}" \
     llava/train/train_mem.py \
     --deepspeed scripts/zero3.json \
     --model_name_or_path $PREV_STAGE_CHECKPOINT \
@@ -60,7 +60,7 @@ ACCELERATE_CPU_AFFINITY=1 CUDA_VISIBLE_DEVICES=4,5,6,7 torchrun --nproc_per_node
     --num_train_epochs 1 \
     --per_device_train_batch_size 1 \
     --per_device_eval_batch_size 2 \
-    --gradient_accumulation_steps 4 \
+    --gradient_accumulation_steps 8 \
     --evaluation_strategy "no" \
     --save_strategy "steps" \
     --save_steps 1000 \
@@ -71,15 +71,17 @@ ACCELERATE_CPU_AFFINITY=1 CUDA_VISIBLE_DEVICES=4,5,6,7 torchrun --nproc_per_node
     --lr_scheduler_type "cosine" \
     --logging_steps 1 \
     --tf32 True \
-    --model_max_length 32768 \
+    --model_max_length 16384 \
     --gradient_checkpointing True \
-    --dataloader_num_workers 4 \
+    --dataloader_num_workers 2 \
     --lazy_preprocess True \
     --report_to wandb \
     --torch_compile True \
     --torch_compile_backend "inductor" \
     --dataloader_drop_last True \
-    --frames_upbound 32
+    --frames_upbound 32\
+    --attn_implementation "flash_attention_2" \
+
 exit 0;
 
 # You can delete the sdpa attn_implementation if you want to use flash attn
